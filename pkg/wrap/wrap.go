@@ -49,7 +49,7 @@ func write(z *zap.Logger, w http.ResponseWriter, r R) {
 	}
 
 	// Set a default status code
-	if r.StatusCode == 0 {
+	if r.StatusCode < http.StatusContinue {
 		r.StatusCode = http.StatusInternalServerError
 	}
 
