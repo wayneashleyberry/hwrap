@@ -19,12 +19,20 @@ type R struct {
 	StatusCode int
 }
 
+type Wrapper struct {
+	z *zap.Logger
+}
+
+func New(z *zap.Logger) Wrapper {
+	return Wrapper{z}
+}
+
 // H implementation
-func H(logger *zap.Logger, h func(r *http.Request) R) http.HandlerFunc {
+func (wrapper Wrapper) H(h func(r *http.Request) R) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		logger = logger.With(
+		logger := wrapper.z.With(
 			zap.String("request.id", middleware.GetReqID(ctx)),
 		)
 

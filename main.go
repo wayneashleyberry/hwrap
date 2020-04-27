@@ -20,11 +20,13 @@ func main() {
 
 	r := httptreemux.NewContextMux()
 
-	r.GET("/slow", wrap.H(logger, handler.Slow))
-	r.GET("/fast", wrap.H(logger, handler.Fast))
-	r.GET("/err", wrap.H(logger, handler.Err))
-	r.GET("/empty", wrap.H(logger, handler.Err))
-	r.GET("/warn", wrap.H(logger, handler.Warn))
+	w := wrap.New(logger)
+
+	r.GET("/slow", w.H(handler.Slow))
+	r.GET("/fast", w.H(handler.Fast))
+	r.GET("/err", w.H(handler.Err))
+	r.GET("/empty", w.H(handler.Err))
+	r.GET("/warn", w.H(handler.Warn))
 
 	chain := alice.New(
 		middleware.RequestID,
