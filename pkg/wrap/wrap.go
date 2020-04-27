@@ -54,8 +54,10 @@ func write(z *zap.Logger, w http.ResponseWriter, r R) {
 	}
 
 	// Write the headers
-	for key, value := range r.Headers {
-		w.Header().Set(key, value)
+	if r.Headers != nil {
+		for key, value := range r.Headers {
+			w.Header().Set(key, value)
+		}
 	}
 
 	// Write the status code
