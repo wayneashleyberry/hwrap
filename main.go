@@ -24,6 +24,7 @@ func main() {
 	r.GET("/fast", wrap.H(logger, handler.Fast))
 	r.GET("/err", wrap.H(logger, handler.Err))
 	r.GET("/empty", wrap.H(logger, handler.Err))
+	r.GET("/warn", wrap.H(logger, handler.Warn))
 
 	chain := alice.New(
 		middleware.RequestID,

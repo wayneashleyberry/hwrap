@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/wayneashleyberry/hwrap/pkg/wrap"
+	"go.uber.org/zap/zapcore"
 )
 
 // Slow handler demonstrates streaming to the response writer, as well
@@ -41,7 +42,7 @@ func Slow(req *http.Request) wrap.R {
 func Fast(req *http.Request) wrap.R {
 	return wrap.R{
 		StatusCode: http.StatusOK,
-		Body:       strings.NewReader("Hello, World!"),
+		Body:       strings.NewReader("Hello, World!\n"),
 		Headers: map[string]string{
 			"Content-Type": "application/json; charset=utf-8",
 		},
@@ -58,4 +59,14 @@ func Err(req *http.Request) wrap.R {
 // Empty handler returns nothing
 func Empty(req *http.Request) wrap.R {
 	return wrap.R{}
+}
+
+// Warn example
+func Warn(req *http.Request) wrap.R {
+	return wrap.R{
+		StatusCode: http.StatusOK,
+		Body:       strings.NewReader("all good\n"),
+		Err:        errors.New("whoops"),
+		ErrLevel:   zapcore.WarnLevel,
+	}
 }

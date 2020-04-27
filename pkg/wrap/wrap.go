@@ -7,12 +7,14 @@ import (
 
 	"github.com/wayneashleyberry/hwrap/pkg/middleware"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // R implementation
 type R struct {
 	Body       io.Reader
 	Err        error
+	ErrLevel   zapcore.Level
 	Headers    map[string]string
 	StatusCode int
 }
@@ -45,7 +47,12 @@ func H(logger *zap.Logger, h func(r *http.Request) R) http.HandlerFunc {
 func write(z *zap.Logger, w http.ResponseWriter, r R) {
 	// Log errors if present
 	if r.Err != nil {
-		z.Error(r.Err.Error())
+		switch r.ErrLevel {
+		case zapcore.WarnLevel:
+			z.Warn(r.Err.Error())
+		default:
+			z.Error(r.Err.Error())
+		}
 	}
 
 	// Set a default status code
