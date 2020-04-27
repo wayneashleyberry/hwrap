@@ -11,7 +11,8 @@ import (
 	"github.com/wayneashleyberry/hwrap/pkg/wrap"
 )
 
-// Slow handler
+// Slow handler demonstrates streaming to the response writer, as well
+// as timing out with an operation that doesn't get cancelled
 func Slow(req *http.Request) wrap.R {
 	time.Sleep(3 * time.Second)
 
@@ -36,10 +37,9 @@ func Slow(req *http.Request) wrap.R {
 	}
 }
 
-// Fast handler
+// Fast handler shows a simpler way to return a response body
 func Fast(req *http.Request) wrap.R {
 	return wrap.R{
-		Err:        nil,
 		StatusCode: http.StatusOK,
 		Body:       strings.NewReader("Hello, World!"),
 		Headers: map[string]string{
@@ -48,14 +48,14 @@ func Fast(req *http.Request) wrap.R {
 	}
 }
 
-// Err handler
+// Err handler only returns an error
 func Err(req *http.Request) wrap.R {
 	return wrap.R{
 		Err: errors.New("something went wrong"),
 	}
 }
 
-// Empty handler
+// Empty handler returns nothing
 func Empty(req *http.Request) wrap.R {
 	return wrap.R{}
 }
